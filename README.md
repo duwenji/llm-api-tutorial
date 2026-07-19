@@ -3,8 +3,9 @@
 LLM API誕生の**経緯**、リクエスト/レスポンスの**仕組み**、業界の**標準化**動向までを
 段階的に学び、実際にAPIを呼び出すコードを書けるようになる教材です。
 
-> 💡 本チュートリアルは Claude API（Anthropic）を主な題材にしつつ、
-> OpenAI互換API や MCP (Model Context Protocol) など業界横断の標準化にも触れます。
+> 💡 本チュートリアルは Claude API（Anthropic）と OpenAI公式API を軸に、
+> 両者を比較しながら学びます。MCP (Model Context Protocol) など
+> 業界横断の標準化にも触れます。
 
 **📢 更新状況**: 🚧 作成中
 
