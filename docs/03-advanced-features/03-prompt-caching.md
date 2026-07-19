@@ -25,8 +25,9 @@
 プレフィックスのどこか1バイトでも変わると、それ以降すべて
 キャッシュが無効になります。
 
-```
-レンダー順序: tools → system → messages
+```mermaid
+flowchart LR
+    A[tools] --> B[system] --> C[messages]
 ```
 
 ### キャッシュを壊す典型パターン
