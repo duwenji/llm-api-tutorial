@@ -21,22 +21,14 @@
 
 ## 学習の流れ
 
-```
-STEP 1 ──→ History and Basics（4教材）
-             経緯・APIの基本仕組み・トークン・認証
-
-STEP 2 ──→ Core Mechanics（3教材）
-             メッセージとロール・ストリーミング・ツール呼び出し
-
-STEP 3 ──→ Advanced Features（4教材）
-             マルチモーダル・拡張思考・プロンプトキャッシュ・構造化出力
-
-STEP 4 ──→ Standardization（3教材）
-             OpenAI互換API・MCP・エラー/バージョニング標準
-              ※ 業界全体の標準化状況の理解
-
-STEP 5 ──→ Real World Examples（3教材）
-             チャットクライアント・エージェント・コスト最適化の構築演習
+```mermaid
+flowchart TD
+    A["STEP 1: History and Basics（4教材）<br/>経緯・APIの基本仕組み・トークン・認証"]
+    B["STEP 2: Core Mechanics（3教材）<br/>メッセージとロール・ストリーミング・ツール呼び出し"]
+    C["STEP 3: Advanced Features（4教材）<br/>マルチモーダル・拡張思考・プロンプトキャッシュ・構造化出力"]
+    D["STEP 4: Standardization（3教材）<br/>OpenAI互換API・MCP・エラー/バージョニング標準<br/>※業界全体の標準化状況の理解"]
+    E["STEP 5: Real World Examples（3教材）<br/>チャットクライアント・エージェント・コスト最適化の構築演習"]
+    A --> B --> C --> D --> E
 ```
 
 ## 前提知識
