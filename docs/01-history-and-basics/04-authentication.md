@@ -50,6 +50,8 @@ client = anthropic.Anthropic(api_key="sk-ant-xxxxxxxx")
 
 ## 実装例
 
+### Claude API
+
 ```bash
 export ANTHROPIC_API_KEY="your-api-key"
 
@@ -68,16 +70,40 @@ headers = {
 }
 ```
 
+### OpenAI公式API
+
+```bash
+export OPENAI_API_KEY="your-api-key"
+
+curl https://api.openai.com/v1/chat/completions \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model": "gpt-4o", "messages": [{"role":"user","content":"Hi"}]}'
+```
+
+```python
+import os
+from openai import OpenAI
+
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+```
+
+> 対応表: ClaudeはAPIキーを`x-api-key`ヘッダーに、
+> OpenAIは`Authorization: Bearer <key>`ヘッダーに載せる。
+> どちらもOAuthベースの認証（`Authorization: Bearer`）も別途サポートする。
+
 ## 演習課題
 
 1. APIキーをコードに直書きしてはいけない理由を2つ挙げよ
 2. 401エラーと403エラーの違いを説明せよ
+3. Claude APIとOpenAI公式APIで、APIキーを載せるヘッダー名の違いを説明せよ
 
 ## 理解度チェック
 
 - [ ] APIキー認証とOAuth認証の違いを説明できる
 - [ ] APIキーを安全に管理する方法（環境変数化）を実践できる
 - [ ] 401/403エラーの典型的な原因を切り分けられる
+- [ ] Claude APIとOpenAI公式APIの認証ヘッダー名の違いを説明できる
 
 ---
 前へ: [03-tokens-and-context.md](03-tokens-and-context.md) | 次へ: [../02-core-mechanics/00-README.md](../02-core-mechanics/00-README.md)

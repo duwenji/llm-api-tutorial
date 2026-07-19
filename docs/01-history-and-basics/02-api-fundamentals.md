@@ -66,6 +66,8 @@ APIサーバーは会話の状態を保持しません。
 
 ## 実装例
 
+### Claude API
+
 ```bash
 curl https://api.anthropic.com/v1/messages \
   -H "Content-Type: application/json" \
@@ -90,16 +92,44 @@ response = client.messages.create(
 print(response.content[0].text)
 ```
 
+### OpenAI公式API
+
+```bash
+curl https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{
+    "model": "gpt-4o",
+    "messages": [{"role": "user", "content": "こんにちは"}]
+  }'
+```
+
+```python
+from openai import OpenAI
+
+client = OpenAI()  # OPENAI_API_KEY 環境変数を利用
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "こんにちは"}],
+)
+print(response.choices[0].message.content)
+```
+
+> 対応表: 認証ヘッダーは`x-api-key`（Claude） vs `Authorization: Bearer`（OpenAI）。
+> 応答テキストは`content[0].text`（Claude） vs `choices[0].message.content`（OpenAI）。
+
 ## 演習課題
 
 1. 3ターンの会話（自己紹介→質問→回答確認）を送るJSONを書け
 2. なぜAPIサーバーが会話状態を保持しない設計になっているか、利点を1つ挙げよ
+3. Claude APIとOpenAI公式APIで、応答テキストを取り出すコードがどう違うか説明せよ
 
 ## 理解度チェック
 
 - [ ] リクエストとレスポンスの基本的なJSON構造を説明できる
 - [ ] ステートレス設計の意味と、クライアント側の責務を説明できる
 - [ ] 認証ヘッダーとバージョンヘッダーの役割の違いを言える
+- [ ] Claude APIとOpenAI公式APIの認証ヘッダー形式の違いを説明できる
 
 ---
 前へ: [01-history-of-llm-api.md](01-history-of-llm-api.md) | 次へ: [03-tokens-and-context.md](03-tokens-and-context.md)
