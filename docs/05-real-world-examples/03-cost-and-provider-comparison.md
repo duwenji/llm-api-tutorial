@@ -91,6 +91,23 @@ batch = client.messages.batches.create(requests=[
     }}
     for i, text in enumerate(items)
 ])
+
+# ポーリングして完了を待つ（バッチは非同期。数分〜最大24時間かかる）
+import time
+
+while True:
+    batch = client.messages.batches.retrieve(batch.id)
+    if batch.processing_status == "ended":
+        break
+    time.sleep(30)
+
+# 結果を取得する（custom_idで元のリクエストと対応づける）
+results = {}
+for result in client.messages.batches.results(batch.id):
+    if result.result.type == "succeeded":
+        results[result.custom_id] = result.result.message.content[0].text
+    else:
+        results[result.custom_id] = f"エラー: {result.result.type}"
 ```
 
 ### OpenAI公式API
@@ -105,9 +122,50 @@ print(f"推定トークン数: {token_count}")
 # 単価は変動するため、コスト計算は公式の料金ページを都度参照する
 ```
 
+```python
+# バッチAPIは、まずJSONL形式のリクエストファイルをアップロードする
+import json
+import time
+
+with open("batch_requests.jsonl", "w") as f:
+    for i, text in enumerate(items):
+        f.write(json.dumps({
+            "custom_id": f"item-{i}",
+            "method": "POST",
+            "url": "/v1/chat/completions",
+            "body": {
+                "model": "gpt-4o-mini", "max_tokens": 10,
+                "messages": [{"role": "user", "content": text}],
+            },
+        }) + "\n")
+
+uploaded = client.files.create(file=open("batch_requests.jsonl", "rb"), purpose="batch")
+batch = client.batches.create(
+    input_file_id=uploaded.id,
+    endpoint="/v1/chat/completions",
+    completion_window="24h",
+)
+
+# ポーリングして完了を待つ
+while True:
+    batch = client.batches.retrieve(batch.id)
+    if batch.status == "completed":
+        break
+    time.sleep(30)
+
+# 出力ファイルをダウンロードし、1行1リクエストのJSONLを読む
+output = client.files.content(batch.output_file_id).text
+results = {}
+for line in output.splitlines():
+    entry = json.loads(line)
+    results[entry["custom_id"]] = entry["response"]["body"]["choices"][0]["message"]["content"]
+```
+
 > 対応表: Claudeは`count_tokens` API呼び出し、OpenAIは`tiktoken`の
 > ローカル実行でトークン数を見積もる。具体的な単価は両社とも
 > 変動するため、コスト計算式に固定値を埋め込まず都度確認する。
+> バッチAPIも構造が異なり、Claudeはリクエストを直接JSONで渡すが、
+> OpenAIはJSONLファイルをFiles APIにアップロードしてから参照する。
 
 ## 演習課題
 
@@ -115,6 +173,8 @@ print(f"推定トークン数: {token_count}")
    それぞれ適したモデル・機能の組み合わせを提案せよ
 2. プロンプトキャッシュとバッチAPIを併用できない/しにくい場面を考えよ
 3. Claude APIとOpenAI公式APIで、事前のトークン数見積もり方法の違いを説明せよ
+4. Claude APIとOpenAI公式APIで、バッチリクエストを渡す方法（直接JSON vs
+   ファイルアップロード）の違いを説明せよ
 
 ## 理解度チェック
 
@@ -122,6 +182,7 @@ print(f"推定トークン数: {token_count}")
 - [ ] キャッシュ・バッチAPI・モデル選定を組み合わせて説明できる
 - [ ] プロバイダ変更の影響を抽象化レイヤーで局所化する発想を理解している
 - [ ] Claude APIとOpenAI公式APIのトークン見積もり方法の違いを説明できる
+- [ ] バッチAPIの作成→ポーリング→結果取得という一連の流れを実装できる
 
 ---
 前へ: [02-tool-calling-agent.md](02-tool-calling-agent.md) | [目次に戻る](../../MASTER-INDEX.md)
