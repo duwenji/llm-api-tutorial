@@ -26,12 +26,20 @@ MCP登場以前は、ツール（GitHub、Slack、DBなど）ごとに
 各LLMアプリが個別の連携コードを書く必要がありました
 （N個のアプリ × M個のツール = N×M通りの実装）。
 
-```
-MCPなし:  アプリA-GitHub連携、アプリA-Slack連携、
-          アプリB-GitHub連携、アプリB-Slack連携 ... （組み合わせ爆発）
-
-MCPあり:  GitHub MCPサーバーを1つ実装すれば、
-          MCP対応クライアントすべてから利用可能
+```mermaid
+flowchart TD
+    subgraph N1["MCPなし（組み合わせ爆発）"]
+        direction LR
+        AppA[アプリA] --> GH1[GitHub連携]
+        AppA --> SL1[Slack連携]
+        AppB[アプリB] --> GH2[GitHub連携]
+        AppB --> SL2[Slack連携]
+    end
+    subgraph N2["MCPあり"]
+        direction LR
+        Server[GitHub MCPサーバー]
+        Client[MCP対応クライアント] --> Server
+    end
 ```
 
 ### 役割分担
