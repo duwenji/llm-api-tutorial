@@ -21,14 +21,13 @@ LLM APIの中心は、単一のHTTPSエンドポイントに対する
 
 ### 基本フロー
 
-```
-クライアント                         APIサーバー
-    │  POST /v1/messages (JSON)          │
-    │ ───────────────────────────────→   │
-    │                                     │  モデルが
-    │                                     │  トークン列を生成
-    │  ←─────────────────────────────    │
-    │  200 OK (JSON レスポンス)           │
+```mermaid
+sequenceDiagram
+    participant C as クライアント
+    participant S as APIサーバー
+    C->>S: POST /v1/messages (JSON)
+    Note over S: モデルがトークン列を生成
+    S-->>C: 200 OK (JSON レスポンス)
 ```
 
 ### 必須ヘッダー
