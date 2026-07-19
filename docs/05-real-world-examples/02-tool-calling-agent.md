@@ -57,6 +57,8 @@ while True:
 
 ## 実装例
 
+### Claude API
+
 ```python
 def execute_tool(name: str, tool_input: dict) -> str:
     if name == "get_order_status":
@@ -95,17 +97,69 @@ for _ in range(10):
     messages.append({"role": "user", "content": tool_results})
 ```
 
+### OpenAI公式API
+
+```python
+import json
+
+
+def execute_tool(name: str, tool_input: dict) -> str:
+    if name == "get_order_status":
+        return f"注文{tool_input['order_id']}: 発送済み"
+    return f"不明なツール: {name}"
+
+
+tools = [{
+    "type": "function",
+    "function": {
+        "name": "get_order_status",
+        "description": "注文IDから配送状況を取得する",
+        "parameters": {
+            "type": "object",
+            "properties": {"order_id": {"type": "string"}},
+            "required": ["order_id"],
+        },
+    },
+}]
+
+messages = [{"role": "user", "content": "注文12345の状況を教えて"}]
+
+for _ in range(10):
+    response = client.chat.completions.create(
+        model="gpt-4o", tools=tools, messages=messages,
+    )
+    choice = response.choices[0]
+    if choice.finish_reason != "tool_calls":
+        print(choice.message.content)
+        break
+
+    messages.append(choice.message)
+    for tool_call in choice.message.tool_calls:
+        args = json.loads(tool_call.function.arguments)
+        result = execute_tool(tool_call.function.name, args)
+        messages.append({
+            "role": "tool", "tool_call_id": tool_call.id, "content": result,
+        })
+```
+
+> 対応表: Claudeは`stop_reason == "tool_use"`、OpenAIは
+> `finish_reason == "tool_calls"`で分岐する。ツール結果の返送も
+> Claudeは1つのuserメッセージにまとめるが、OpenAIはツールごとに
+> 独立した`role: "tool"`メッセージを追加する。
+
 ## 演習課題
 
 1. 複数のツール呼び出しが1回のレスポンスに含まれる場合、
    すべての結果を1つのuserメッセージにまとめるべき理由を説明せよ
 2. `MAX_ITERATIONS`到達時にユーザーへ表示すべきメッセージを設計せよ
+3. Claude APIとOpenAI公式APIで、複数ツール呼び出しの結果返送方法の違いを説明せよ
 
 ## 理解度チェック
 
 - [ ] エージェントループの基本構造を実装できる
 - [ ] `stop_reason`に応じた分岐処理を書ける
 - [ ] 無限ループを防ぐ安全装置の必要性を説明できる
+- [ ] Claude APIとOpenAI公式APIのエージェントループ終了条件の違いを説明できる
 
 ---
 前へ: [01-simple-chat-client.md](01-simple-chat-client.md) | 次へ: [03-cost-and-provider-comparison.md](03-cost-and-provider-comparison.md)

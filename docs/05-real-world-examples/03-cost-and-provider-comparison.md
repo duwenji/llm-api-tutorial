@@ -70,6 +70,8 @@ def classify_simple(text: str) -> str:
 
 ## 実装例
 
+### Claude API
+
 ```python
 # 事前にトークン数を見積もり、コストを試算する
 count = client.messages.count_tokens(
@@ -91,17 +93,35 @@ batch = client.messages.batches.create(requests=[
 ])
 ```
 
+### OpenAI公式API
+
+```python
+# tiktokenでトークン数を見積もる（単価は公式サイトの最新情報を参照）
+import tiktoken
+
+encoding = tiktoken.encoding_for_model("gpt-4o")
+token_count = len(encoding.encode(long_document))
+print(f"推定トークン数: {token_count}")
+# 単価は変動するため、コスト計算は公式の料金ページを都度参照する
+```
+
+> 対応表: Claudeは`count_tokens` API呼び出し、OpenAIは`tiktoken`の
+> ローカル実行でトークン数を見積もる。具体的な単価は両社とも
+> 変動するため、コスト計算式に固定値を埋め込まず都度確認する。
+
 ## 演習課題
 
 1. 「大量の商品レビュー分類」と「1件の複雑な契約書レビュー」で、
    それぞれ適したモデル・機能の組み合わせを提案せよ
 2. プロンプトキャッシュとバッチAPIを併用できない/しにくい場面を考えよ
+3. Claude APIとOpenAI公式APIで、事前のトークン数見積もり方法の違いを説明せよ
 
 ## 理解度チェック
 
 - [ ] タスクの性質に応じたモデル選定ができる
 - [ ] キャッシュ・バッチAPI・モデル選定を組み合わせて説明できる
 - [ ] プロバイダ変更の影響を抽象化レイヤーで局所化する発想を理解している
+- [ ] Claude APIとOpenAI公式APIのトークン見積もり方法の違いを説明できる
 
 ---
 前へ: [02-tool-calling-agent.md](02-tool-calling-agent.md) | [目次に戻る](../../MASTER-INDEX.md)

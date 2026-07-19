@@ -66,6 +66,8 @@ def send(text):
 
 ## 実装例
 
+### Claude API
+
 ```python
 import anthropic
 
@@ -100,17 +102,63 @@ conversation.send("私の名前はAliceです")
 conversation.send("私の名前は覚えていますか？")
 ```
 
+### OpenAI公式API
+
+```python
+from openai import OpenAI
+
+class OpenAIConversationManager:
+    def __init__(self, client: OpenAI, model: str, system: str = ""):
+        self.client = client
+        self.model = model
+        self.messages: list[dict] = []
+        if system:
+            self.messages.append({"role": "system", "content": system})
+
+    def send(self, user_text: str) -> str:
+        self.messages.append({"role": "user", "content": user_text})
+        stream = self.client.chat.completions.create(
+            model=self.model, messages=self.messages, stream=True,
+        )
+        chunks = []
+        for event in stream:
+            delta = event.choices[0].delta.content
+            if delta:
+                print(delta, end="", flush=True)
+                chunks.append(delta)
+        reply = "".join(chunks)
+        self.messages.append({"role": "assistant", "content": reply})
+        print()
+        return reply
+
+
+conversation = OpenAIConversationManager(
+    client=OpenAI(),
+    model="gpt-4o",
+    system="あなたは簡潔で親しみやすいアシスタントです。",
+)
+conversation.send("私の名前はAliceです")
+conversation.send("私の名前は覚えていますか？")
+```
+
+> 対応表: OpenAI版は`system`メッセージを`messages`配列の先頭に積む点、
+> ストリーミングのチャンクを`choices[0].delta.content`から取り出す点が
+> Claude版と異なる。
+
 ## 演習課題
 
 1. 会話履歴が一定ターン数（例: 20）を超えたら古い履歴を削除する
    仕組みを追加せよ
 2. APIエラー発生時に3回までリトライする処理を追加せよ
+3. `ConversationManager`をClaude/OpenAI両対応にするための
+   共通インターフェース（抽象基底クラス等）を設計せよ
 
 ## 理解度チェック
 
 - [ ] 会話履歴管理をクラスにカプセル化する意義を説明できる
 - [ ] ストリーミング表示と最終応答取得を両立できる
 - [ ] エラー時に履歴が壊れないようにする設計ができる
+- [ ] Claude版とOpenAI版で会話履歴管理クラスの実装差分を説明できる
 
 ---
 前へ: [../04-standardization/03-error-handling-and-versioning.md](../04-standardization/03-error-handling-and-versioning.md) | 次へ: [02-tool-calling-agent.md](02-tool-calling-agent.md)
