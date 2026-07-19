@@ -67,7 +67,18 @@
 
 `tool_use_id`が一致していないと、モデル側は結果を正しく紐づけられません。
 
+### OpenAI公式APIとの用語対応
+
+| 概念 | Claude API | OpenAI公式API |
+|------|-----------|----------------|
+| ツール定義フィールド | `input_schema` | `parameters` |
+| 呼び出しブロック | `tool_use`（`content`内） | `tool_calls`（`message`内） |
+| 結果の返送 | `tool_result`（userメッセージ内） | `role: "tool"`の独立メッセージ |
+| 対応ID | `tool_use_id` | `tool_call_id` |
+
 ## 実装例
+
+### Claude API
 
 ```python
 tools = [{
@@ -101,16 +112,55 @@ if response.stop_reason == "tool_use":
     print(final.content[0].text)
 ```
 
+### OpenAI公式API
+
+```python
+tools = [{
+    "type": "function",
+    "function": {
+        "name": "get_weather",
+        "description": "指定した都市の現在の天気を取得する",
+        "parameters": {
+            "type": "object",
+            "properties": {"location": {"type": "string"}},
+            "required": ["location"],
+        },
+    },
+}]
+
+messages = [{"role": "user", "content": "東京の天気を教えて"}]
+response = client.chat.completions.create(
+    model="gpt-4o", tools=tools, messages=messages,
+)
+
+if response.choices[0].finish_reason == "tool_calls":
+    tool_call = response.choices[0].message.tool_calls[0]
+    args = json.loads(tool_call.function.arguments)
+    result = f"{args['location']}: 晴れ、24℃"  # 実際のAPI呼び出しに置換
+
+    messages.append(response.choices[0].message)
+    messages.append({
+        "role": "tool", "tool_call_id": tool_call.id, "content": result,
+    })
+
+    final = client.chat.completions.create(
+        model="gpt-4o", tools=tools, messages=messages,
+    )
+    print(final.choices[0].message.content)
+```
+
 ## 演習課題
 
 1. 「注文番号から配送状況を取得する」ツールの`input_schema`を書け
 2. `tool_use_id`を正しく対応させないとどうなるか説明せよ
+3. Claude APIの`tool_use`とOpenAI公式APIの`tool_calls`の構造上の違いを説明せよ
 
 ## 理解度チェック
 
 - [ ] ツール呼び出しの5ステップの往復フローを説明できる
 - [ ] `description`が呼び出し判断に重要な理由を説明できる
 - [ ] `tool_use`と`tool_result`を正しく対応づけて送信できる
+- [ ] Claude APIとOpenAI公式APIのツール定義フィールド名の違いを説明できる
 
 ---
 前へ: [02-streaming.md](02-streaming.md) | 次へ: [../03-advanced-features/00-README.md](../03-advanced-features/00-README.md)

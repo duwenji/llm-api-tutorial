@@ -51,7 +51,22 @@ data: {"type":"message_stop"}
 | `message_delta` | `stop_reason`や使用量の更新 |
 | `message_stop` | 応答完了時に1回 |
 
+### OpenAIのストリーミング形式との違い
+
+OpenAI公式APIは名前付きイベントを使わず、`chat.completion.chunk`型の
+チャンクを連続送信し、最後に`data: [DONE]`を送って終端を示す。
+
+```
+data: {"choices":[{"delta":{"content":"こん"}}]}
+
+data: {"choices":[{"delta":{"content":"にちは"}}]}
+
+data: [DONE]
+```
+
 ## 実装例
+
+### Claude API
 
 ```python
 with client.messages.stream(
@@ -80,16 +95,35 @@ for await (const event of stream) {
 }
 ```
 
+### OpenAI公式API
+
+```python
+stream = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "俳句を書いてください"}],
+    stream=True,
+)
+for chunk in stream:
+    delta = chunk.choices[0].delta.content
+    if delta:
+        print(delta, end="", flush=True)
+```
+
+> 対応表: Claudeは`message_stop`イベントで終端を示すが、
+> OpenAIはチャンク列の最後に`data: [DONE]`を送って終端を示す。
+
 ## 演習課題
 
 1. 非ストリーミングと比べてストリーミングが優れている点を2つ挙げよ
 2. `content_block_delta`と`message_stop`イベントの違いを説明せよ
+3. Claude APIとOpenAI公式APIで、ストリーミングの終端の示し方の違いを説明せよ
 
 ## 理解度チェック
 
 - [ ] ストリーミングが必要になる典型的な場面を説明できる
 - [ ] SSEの主要イベント種別と発生順序を理解している
 - [ ] ストリーミング中に最終応答をまとめて取得する方法を知っている
+- [ ] Claude APIとOpenAI公式APIのストリーミング終端方式の違いを説明できる
 
 ---
 前へ: [01-messages-and-roles.md](01-messages-and-roles.md) | 次へ: [03-tool-use.md](03-tool-use.md)

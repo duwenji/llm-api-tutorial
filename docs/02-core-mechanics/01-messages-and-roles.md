@@ -28,6 +28,10 @@
 | `assistant` | モデル側の応答（過去の応答） | 含む |
 | `tool_result` | ツール実行結果の返送 | `user`メッセージ内の特殊ブロックとして含む |
 
+> **Claude vs OpenAI**: Claudeは`system`を独立したトップレベルフィールドとして
+> 分離するが、OpenAI公式APIでは`system`も`messages`配列内の
+> 1メッセージ（`{"role": "system", "content": "..."}`）として扱う。
+
 ### システムプロンプトの位置づけ
 
 システムプロンプトは会話全体に効く「前提条件」です。
@@ -68,6 +72,8 @@
 
 ## 実装例
 
+### Claude API
+
 ```python
 messages = []
 
@@ -87,17 +93,41 @@ print(send("私の名前はAliceです"))
 print(send("私の名前は何でしたか？"))  # "Alice"を覚えている
 ```
 
+### OpenAI公式API
+
+```python
+messages = [{"role": "system", "content": "あなたは簡潔に回答するアシスタントです。"}]
+
+def send(user_text: str) -> str:
+    messages.append({"role": "user", "content": user_text})
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=messages,
+    )
+    reply = response.choices[0].message.content
+    messages.append({"role": "assistant", "content": reply})
+    return reply
+
+print(send("私の名前はAliceです"))
+print(send("私の名前は何でしたか？"))  # "Alice"を覚えている
+```
+
+> 対応表: Claudeは`system`パラメータが独立しているが、
+> OpenAIは`messages`配列の先頭に`{"role": "system", ...}`を置く。
+
 ## 演習課題
 
 1. 「敬語で回答する」「箇条書きは使わない」という制約を
    systemプロンプトとして書け
 2. 3ターンの会話（自己紹介→好きな食べ物→質問確認）のJSON配列を作れ
+3. Claude APIとOpenAI公式APIで、systemプロンプトの位置づけの違いを説明せよ
 
 ## 理解度チェック
 
 - [ ] system/user/assistantそれぞれの役割を説明できる
 - [ ] 可変情報をsystemプロンプトに入れるべきでない理由を説明できる
 - [ ] 複数ターンの会話履歴を正しい形式で組み立てられる
+- [ ] Claude APIとOpenAI公式APIでsystemの扱いがどう違うか説明できる
 
 ---
 前へ: [../01-history-and-basics/04-authentication.md](../01-history-and-basics/04-authentication.md) | 次へ: [02-streaming.md](02-streaming.md)
