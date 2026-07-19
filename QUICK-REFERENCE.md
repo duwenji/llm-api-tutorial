@@ -75,6 +75,7 @@
 | プロンプトキャッシュ | `cache_control`を明示指定（任意） | 一定長以上で自動適用（指定不要） |
 | 内部推論の制御 | `thinking`（`type: "adaptive"`）+ `effort` | 推論系モデルの`reasoning_effort` |
 | トークン数の事前確認 | `client.messages.count_tokens()` | `tiktoken`ライブラリ |
+| バッチリクエストの渡し方 | リクエストを直接JSONで渡す | JSONLファイルをFiles APIにアップロード |
 
 ## コスト計算の基本式
 
