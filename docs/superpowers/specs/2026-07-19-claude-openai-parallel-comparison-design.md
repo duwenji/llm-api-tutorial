@@ -135,9 +135,9 @@ Claude API（Anthropic）と OpenAI公式API を2大主軸として、
 
 ## 検証チェックリスト（実装後にセルフレビュー）
 
-- [ ] 19教材すべてに Claude/OpenAI 両方のコードブロックがある
-- [ ] 「OpenAI公式API」「OpenAI互換（サードパーティ）API」の呼称が全編で統一されている
-- [ ] OpenAI側コードのパラメータ名が実在のChat Completions API仕様と矛盾しない
-- [ ] 全コードブロックに言語タグが付いている
-- [ ] 追記により前後ナビゲーションリンクが壊れていない
-- [ ] QUICK-REFERENCEの対応表と各教材内の対応表に矛盾がない
+- [x] 19教材すべてに Claude/OpenAI 両方のコードブロックがある
+- [x] 「OpenAI公式API」「OpenAI互換（サードパーティ）API」の呼称が全編で統一されている
+- [x] OpenAI側コードのパラメータ名が実在のChat Completions API仕様と矛盾しない
+- [x] 全コードブロックに言語タグが付いている
+- [x] 追記により前後ナビゲーションリンクが壊れていない
+- [x] QUICK-REFERENCEの対応表と各教材内の対応表に矛盾がない
