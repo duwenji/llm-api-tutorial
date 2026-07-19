@@ -19,15 +19,14 @@
 
 ### 設計の全体像
 
-```
-ConversationManager
-  ├── messages: 会話履歴（役割付き配列）
-  ├── system: システムプロンプト（固定）
-  └── send(user_text) -> str
-        1. messagesにuserメッセージを追加
-        2. APIを呼び出す（ストリーミング推奨）
-        3. assistantの応答をmessagesに追加
-        4. 応答テキストを返す
+```mermaid
+classDiagram
+    class ConversationManager {
+      +list messages
+      +str system
+      +send(user_text) str
+    }
+    note for ConversationManager "send()の内部手順:\n1. userメッセージを追加\n2. APIを呼び出す（ストリーミング推奨）\n3. assistant応答を追加\n4. 応答テキストを返す"
 ```
 
 ### 良い設計・悪い設計の対比
