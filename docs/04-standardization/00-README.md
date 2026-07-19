@@ -17,8 +17,9 @@
 | 01 | [OpenAI互換API](01-openai-compatible-api.md) | Chat Completions形式の普及と実態 |
 | 02 | [MCP (Model Context Protocol)](02-mcp-protocol.md) | ツール接続の標準プロトコル |
 | 03 | [エラー・バージョニング標準](03-error-handling-and-versioning.md) | 標準化された部分・されていない部分 |
+| 04 | [Claude ⇔ OpenAI 対応表](04-claude-openai-mapping.md) | 全教材の比較の総まとめ |
 
 ## 学習の進め方
 
-01 → 03 の順に進めることを推奨します。
+01 → 04 の順に進めることを推奨します。
 各教材の「理解度チェック」で習得状況を確認してください。

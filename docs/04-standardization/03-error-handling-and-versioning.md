@@ -115,4 +115,4 @@ except openai.APIStatusError as e:
 - [ ] Claude SDKとOpenAI SDKの型付き例外の共通パターンを説明できる
 
 ---
-前へ: [02-mcp-protocol.md](02-mcp-protocol.md) | 次へ: [../05-real-world-examples/00-README.md](../05-real-world-examples/00-README.md)
+前へ: [02-mcp-protocol.md](02-mcp-protocol.md) | 次へ: [04-claude-openai-mapping.md](04-claude-openai-mapping.md)

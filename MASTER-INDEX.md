@@ -36,6 +36,7 @@
 - [docs/04-standardization/01-openai-compatible-api.md](docs/04-standardization/01-openai-compatible-api.md) - OpenAI互換API
 - [docs/04-standardization/02-mcp-protocol.md](docs/04-standardization/02-mcp-protocol.md) - MCP (Model Context Protocol)
 - [docs/04-standardization/03-error-handling-and-versioning.md](docs/04-standardization/03-error-handling-and-versioning.md) - エラー・バージョニング標準
+- [docs/04-standardization/04-claude-openai-mapping.md](docs/04-standardization/04-claude-openai-mapping.md) - Claude ⇔ OpenAI 対応表
 
 ## 05. Real World Examples 🚧
 - [docs/05-real-world-examples/00-README.md](docs/05-real-world-examples/00-README.md)

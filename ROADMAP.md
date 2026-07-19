@@ -7,7 +7,7 @@
 | 01. History and Basics | 4 | 🚧 作成中 |
 | 02. Core Mechanics | 3 | 🚧 作成中 |
 | 03. Advanced Features | 4 | 🚧 作成中 |
-| 04. Standardization | 3 | 🚧 作成中 |
+| 04. Standardization | 4 | 🚧 作成中 |
 | 05. Real World Examples | 3 | 🚧 作成中 |
 
 ## 今後の拡張予定

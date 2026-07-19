@@ -56,26 +56,11 @@
 
 ## Claude ⇔ OpenAI 対応表
 
-会話の構造・呼び出し形式で名称が異なる概念の対応一覧です。
-個別教材の対応表はこの表と矛盾しないようにしてください。
-
-| 概念 | Claude API | OpenAI公式API |
-|------|-----------|----------------|
-| エンドポイント | `POST /v1/messages` | `POST /v1/chat/completions` |
-| 認証ヘッダー | `x-api-key: <key>` | `Authorization: Bearer <key>` |
-| systemメッセージ | 独立した`system`フィールド | `messages`配列内の`{"role":"system",...}` |
-| 応答テキストの取得 | `response.content[0].text` | `response.choices[0].message.content` |
-| ツール定義フィールド | `input_schema` | `parameters` |
-| ツール呼び出しブロック | `tool_use`（`content`内） | `tool_calls`（`message`内） |
-| ツール結果の返送 | `tool_result`（userメッセージ内） | `role: "tool"`の独立メッセージ |
-| 応答終了理由 | `stop_reason`（`tool_use`, `end_turn`等） | `finish_reason`（`tool_calls`, `stop`等） |
-| ストリーミング終端 | `message_stop`イベント | `data: [DONE]` |
-| 画像入力ブロック | `{"type":"image","source":{...}}` | `{"type":"image_url","image_url":{"url":"..."}}` |
-| 構造化出力 | `output_config.format`（`json_schema`） | `response_format`（`json_schema`, `strict`） |
-| プロンプトキャッシュ | `cache_control`を明示指定（任意） | 一定長以上で自動適用（指定不要） |
-| 内部推論の制御 | `thinking`（`type: "adaptive"`）+ `effort` | 推論系モデルの`reasoning_effort` |
-| トークン数の事前確認 | `client.messages.count_tokens()` | `tiktoken`ライブラリ |
-| バッチリクエストの渡し方 | リクエストを直接JSONで渡す | JSONLファイルをFiles APIにアップロード |
+概念ごとの詳細な対応表は
+[docs/04-standardization/04-claude-openai-mapping.md](docs/04-standardization/04-claude-openai-mapping.md)
+にまとめました。エンドポイント・認証ヘッダー・ツール呼び出し・
+ストリーミング・構造化出力・プロンプトキャッシュ・バッチAPIなど、
+全教材の対応表の総まとめです。
 
 ## コスト計算の基本式
 
