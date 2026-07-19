@@ -76,16 +76,25 @@ curl https://api.anthropic.com/v1/messages \
   }'
 ```
 
+### 業界横断での採用状況
+
+MCPはAnthropicが公開したプロトコルだが、特定ベンダー専用の仕組みではない。
+OpenAIのエージェント向けツール群を含め、業界横断で採用が広がっている。
+「標準化」とは、1社の独占ではなく複数ベンダーが同じ仕様に乗ることを指す
+好例といえる。
+
 ## 演習課題
 
 1. MCPが無い場合に発生する「組み合わせ爆発」を具体例で説明せよ
 2. MCPサーバーとMCPクライアントの役割の違いを説明せよ
+3. MCPがAnthropic発でありながら業界横断で採用されている意義を説明せよ
 
 ## 理解度チェック
 
 - [ ] MCPが解決するN×M問題を説明できる
 - [ ] MCPサーバー/クライアントの役割分担を理解している
 - [ ] 通常のツール呼び出しとMCPの再利用性の違いを説明できる
+- [ ] MCPが特定ベンダー専用ではなく業界横断の標準である点を説明できる
 
 ---
 前へ: [01-openai-compatible-api.md](01-openai-compatible-api.md) | 次へ: [03-error-handling-and-versioning.md](03-error-handling-and-versioning.md)

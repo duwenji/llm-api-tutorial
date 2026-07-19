@@ -1,12 +1,18 @@
-# OpenAI互換API
+# OpenAI互換（サードパーティ）API
 
 ## この教材で身につくこと
 
+- 「OpenAI公式API」と「OpenAI互換（サードパーティ）API」の違い
 - OpenAI Chat Completions形式が事実上の標準になった経緯
 - 「OpenAI互換」を謳うサーバー・SDKの実態
 - 完全な仕様統一ではない点への注意
 
 ## 概要
+
+> **用語の注意**: 本教材の「OpenAI互換API」は、OpenAI自身が提供する
+> **公式API**（`api.openai.com`）ではなく、OpenAI以外の第三者が
+> OpenAI形式のリクエストを受け付ける**互換サーバー**を指す。
+> 公式APIそのものの使い方は01〜03章の各教材を参照。
 
 多くのOSS推論サーバー（vLLM、Ollamaなど）や他社プロバイダが、
 OpenAIのChat Completions API形式のリクエスト/レスポンスを

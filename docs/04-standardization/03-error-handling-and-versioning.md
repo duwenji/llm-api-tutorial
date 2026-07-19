@@ -66,6 +66,8 @@ except Exception:
 
 ## 実装例
 
+### Claude API
+
 ```python
 # 型付き例外を最も具体的なものから順にキャッチする
 try:
@@ -79,16 +81,38 @@ except anthropic.APIStatusError as e:
     print(f"APIエラー: {e.status_code} {e.message}")
 ```
 
+### OpenAI公式API
+
+```python
+import openai
+
+try:
+    response = client.chat.completions.create(
+        model="gpt-4o", messages=[{"role": "user", "content": "Hi"}],
+    )
+except openai.NotFoundError:
+    print("モデルIDを確認してください")
+except openai.RateLimitError:
+    print("しばらく待ってから再試行してください")
+except openai.APIStatusError as e:
+    print(f"APIエラー: {e.status_code} {e.message}")
+```
+
+> 対応表: どちらのSDKもHTTPステータスコード（404/429/5xx等）に沿った
+> 型付き例外クラスを提供し、キャッチする順序・考え方は共通している。
+
 ## 演習課題
 
 1. 429エラーと400エラーで、リトライ戦略をどう変えるべきか説明せよ
 2. モデルID命名規則が標準化されていない理由を推測して述べよ
+3. Claude SDKとOpenAI SDKの型付き例外の使い方がどれだけ似ているか説明せよ
 
 ## 理解度チェック
 
 - [ ] 標準化されている部分・されていない部分を切り分けられる
 - [ ] HTTPステータスコードに基づくリトライ判断ができる
 - [ ] 型付き例外を使うべき理由を説明できる
+- [ ] Claude SDKとOpenAI SDKの型付き例外の共通パターンを説明できる
 
 ---
 前へ: [02-mcp-protocol.md](02-mcp-protocol.md) | 次へ: [../05-real-world-examples/00-README.md](../05-real-world-examples/00-README.md)
